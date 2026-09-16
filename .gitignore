@@ -1,12 +1,10 @@
 
-UnityProject/UserSettings/Layouts/default-2021.dwlt
+UnityProject/UserSettings/Layouts/
 UnityProject/UserSettings/Search.settings
+UnityProject/UserSettings/Search.index
 
-#Luban
-Tools/Luban/
-Tools/Luban.ClientServer/
-Configs/.cache.meta
-GenerateDatas/
+#Bridge 自动截图产物
+UnityProject/screenshots/
 
 #FileServer
 Tools/FileServer/AssetRoot
@@ -21,3 +19,6 @@ Tools/GameEventSourceGenerator/*/obj
 
 #openspec
 openspec/
+
+#macOS
+.DS_Store

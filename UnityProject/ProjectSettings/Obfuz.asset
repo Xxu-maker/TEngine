@@ -19,7 +19,6 @@ MonoBehaviour:
   assemblySettings:
     assembliesToObfuscate:
     - GameLogic
-    - GameProto
     nonObfuscatedButReferencingObfuscatedAssemblies:
     - TEngine.Runtime
     - Launcher

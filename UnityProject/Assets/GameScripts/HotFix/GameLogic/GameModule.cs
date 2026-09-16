@@ -1,4 +1,4 @@
-﻿using GameLogic;
+using GameLogic;
 using TEngine;
 using Object = UnityEngine.Object;
 
@@ -84,6 +84,13 @@ public class GameModule
     public static ILocalizationModule Localization => _localization ??= Get<ILocalizationModule>();
     
     private static ILocalizationModule _localization;
+
+    /// <summary>
+    /// 获取 CSV 配置表模块（直接读 CSV，不走 Luban 导表）。
+    /// </summary>
+    public static ICsvConfigModule Csv => _csv ??= Get<ICsvConfigModule>();
+
+    private static ICsvConfigModule _csv;
     #endregion
     
     /// <summary>
@@ -114,5 +121,6 @@ public class GameModule
         _scene = null;
         _timer = null;
         _localization = null;
+        _csv = null;
     }
 }

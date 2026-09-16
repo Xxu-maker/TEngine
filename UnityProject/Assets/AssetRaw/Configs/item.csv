@@ -1,0 +1,8 @@
+##var,id,name,desc,price,quality,upgrade_to_item_id,batch_useable,exchange_list
+##type,int,string,string,int,string,int,bool,string
+##,编号,名字,描述,价格,品质,升级到,可否批量使用,兑换列表(道具id,数量;...)
+##group,c,s,c,c,c,c,c,c
+10001,发型,初始发型,0,WHITE,0,false,
+10002,外套,初始外套,100,BLUE,0,true,"10001,2;10002,3"
+10003,上衣,初始上衣,200,BLUE,0,true,"10003,3;10001,2"
+10004,裙子,初始下装,300,PURPLE,0,true,"10004,3;10002,4"

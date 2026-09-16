@@ -18,7 +18,6 @@ MonoBehaviour:
   il2cppPlusRepoURL: https://gitee.com/focus-creative-games/il2cpp_plus
   hotUpdateAssemblyDefinitions: []
   hotUpdateAssemblies:
-  - GameProto
   - GameLogic
   preserveHotUpdateAssemblies: []
   hotUpdateDllCompileOutputRootDir: HybridCLRData/HotUpdateDlls
@@ -29,12 +28,10 @@ MonoBehaviour:
   - System.dll
   - System.Core.dll
   - TEngine.Runtime.dll
-  - YooAsset.dll
   - UniTask.dll
+  - YooAsset.dll
   - UnityEngine.CoreModule.dll
   outputLinkFile: HybridCLRGenerate/link.xml
   outputAOTGenericReferenceFile: HybridCLRGenerate/AOTGenericReferences.cs
   maxGenericReferenceIteration: 10
   maxMethodBridgeGenericIteration: 10
-  enableProfilerInReleaseBuild: 0
-  enableStraceTraceInWebGLReleaseBuild: 0
