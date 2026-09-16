@@ -3,7 +3,7 @@
 请使用中文写提案和回答
 这个文件为 Claude Code (claude.ai/code) 提供指导，用于处理此代码库中的代码。
 
-TEngine 基于 HybridCLR + YooAsset + UniTask + Luban 构建。
+TEngine 基于 HybridCLR + YooAsset + UniTask 构建；配置表以 **CSV 直读**（不走 Luban）。
 
 ---
 
@@ -54,7 +54,8 @@ TEngine 基于 HybridCLR + YooAsset + UniTask + Luban 构建。
 | 热更代码 | hotfix-workflow.md — 程序集划分、GameApp 入口、热更边界 |
 | 事件系统 | event-system.md — GameEvent 用法、AddUIEvent 规范 |
 | 模块使用 | modules.md — GameModule.XXX API、模块生命周期 |
-| Luban 配置 | luban-config.md — 配置表生成流程、访问方式 |
+| 配置表 | config-csv.md — CSV 直读（表头格式、读写 API、新增表流程；不走 Luban） |
+| Unity 操作 | bridge-tools.md — 场景/GameObject/UI Prefab/脚本/资源/Play 验证 |
 | 代码规范 | naming-rules.md — 命名约定、节点前缀、设计模式 |
 
 ---
@@ -75,7 +76,7 @@ TEngine 基于 HybridCLR + YooAsset + UniTask + Luban 构建。
 1. **异步优先**：IO 操作用 `UniTask`，禁止同步加载/Coroutine
 2. **模块访问**：通过 `GameModule.XXX` 访问，而非 `ModuleSystem.GetModule<T>()`
 3. **资源必须释放**：`LoadAssetAsync` 对应 `UnloadAsset`，GameObject 用 `LoadGameObjectAsync`
-4. **热更边界**：`GameScripts/Main` 不热更，`GameScripts/HotFix/` 全部热更
+4. **热更边界**：`GameScripts/HotFix/` 全部热更；`GameEntry.cs` 与 `Procedure/` 属 Assembly-CSharp，**不**热更（工程中不存在 `GameScripts/Main` 目录）
 5. **事件解耦**：模块间用 `GameEvent`，UI 内部用 `AddUIEvent`
 
 ---
@@ -92,13 +93,13 @@ TEngine 基于 HybridCLR + YooAsset + UniTask + Luban 构建。
 | event-system.md | 事件系统（两种模式/核心接口）| 核心 |
 | resource-api.md | 资源加载/卸载 | 核心 |
 | hotfix-workflow.md | 热更代码（HybridCLR/程序集划分/热更包）| 核心 |
-| luban-config.md | 配置表 | 核心 |
+| config-csv.md | 配置表（CSV 直读）| 核心 |
 | naming-rules.md | 代码规范/命名约定/节点前缀 | 核心 |
 | ui-patterns.md | UI 进阶（Widget 模板/节点绑定）| 进阶 |
 | event-antipatterns.md | 事件避坑（内存泄漏/接口无响应/风暴）| 进阶 |
 | resource-patterns.md | 资源管理模式/生命周期/泄漏根因 | 进阶 |
-| mcp-tools.md | MCP 场景/GameObject/UI Prefab/脚本/Editor/测试 | MCP |
-| mcp-visual.md | MCP 材质/Shader/VFX/动画 | MCP |
+| bridge-tools.md | Unity 操作（场景/GameObject/UI Prefab/脚本/Editor/Play）| 桥 |
+| bridge-visual.md | 材质/Shader/VFX/动画（编辑器 C# 配方）| 桥 |
 | troubleshooting.md | 问题排查 | 排障 |
 
 ---

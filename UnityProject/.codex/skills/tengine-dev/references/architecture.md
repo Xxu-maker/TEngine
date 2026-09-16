@@ -1,6 +1,6 @@
 # TEngine 架构与项目结构
 
-> **适用场景**：理解项目分层架构、程序集划分、目录结构、启动流程 | **关联文档**：[modules.md](modules.md)、[hotfix-workflow.md](hotfix-workflow.md)、[resource-api.md](resource-api.md)
+> **适用场景**：理解项目分层架构、程序集划分、目录结构、启动流程 | **关联文档**：[modules.md](modules.md)、[hotfix-workflow.md](hotfix-workflow.md)、[resource-api.md](resource-api.md)、[config-csv.md](config-csv.md)
 
 ## 核心架构
 
@@ -9,7 +9,7 @@
 ```
 ┌─────────────────────────────────────────────┐
 │         游戏业务层 (HotFix)                  │
-│  GameLogic / GameProto                      │
+│  GameLogic                                  │
 │  ↑ 热更代码，业务逻辑，高频变更              │
 └─────────────────────────────────────────────┘
                      ↓ 依赖
@@ -27,7 +27,7 @@
                      ↓ 依赖
 ┌─────────────────────────────────────────────┐
 │         基础设施层 (Unity + 第三方)           │
-│  YooAsset / HybridCLR / UniTask / Luban     │
+│  YooAsset / HybridCLR / UniTask             │
 └─────────────────────────────────────────────┘
 ```
 
@@ -43,13 +43,13 @@
 | `TEngine.Editor` | Assets/TEngine/Editor/ | 否 | 编辑器工具 |
 | `Launcher` | Assets/Launcher/ | 否 | 启动器 UI（LoadUpdateUI、LoadTipsUI 等） |
 | Assembly-CSharp | Assets/GameScripts/ | 否 | GameEntry 启动入口、主包流程 |
-| `GameProto` | Assets/GameScripts/HotFix/GameProto/ | 是 | Luban 配置代码 |
-| `GameLogic` | Assets/GameScripts/HotFix/GameLogic/ | 是 | 业务逻辑，热更主入口 |
+| `GameLogic` | Assets/GameScripts/HotFix/GameLogic/ | 是 | 业务逻辑、CSV 配置模块，热更主入口 |
 
 **约束**：
-- `GameLogic` 可依赖 `GameProto` 和 `TEngine.Runtime`
+- `GameLogic` 可依赖 `TEngine.Runtime`
 - 热更代码不能引用主工程 internal 类型
 - `GameEntry.cs` 和 `Procedure/` 属于 Assembly-CSharp，不参与热更
+- 工程中**不存在** `GameScripts/Main` 与 `GameScripts/HotFix/GameProto` 两个目录（后者随 Luban 一并移除）
 
 ---
 
@@ -57,13 +57,11 @@
 
 ```
 TEngine/
-├── Configs/GameConfig/           # Luban 配置表工程
-│   ├── Datas/                    # Excel 数据源
-│   └── gen_code_bin_to_project.bat
-│
 └── UnityProject/Assets/
     ├── AssetRaw/                 # 热更资源目录（YooAsset 打包来源）
-    │   ├── Actor/ Audios/ Configs/ Effects/ Fonts/
+    │   ├── Configs/              # CSV 配置表（*.csv，运行时直读）
+    │   ├── DLL/                  # 热更 DLL（*.bytes）
+    │   ├── Actor/ Audios/ Effects/ Fonts/
     │   ├── Materials/ Scenes/ Shaders/ UI/
     │   └── ...
     ├── Launcher/                 # 启动器模块
@@ -75,8 +73,8 @@ TEngine/
         ├── GameEntry.cs          # 游戏启动入口
         ├── Procedure/            # 主包流程状态机
         └── HotFix/               # 热更代码
-            ├── GameProto/        # Luban 生成代码
             └── GameLogic/        # 业务逻辑主开发区域
+                └── Config/       # CSV 配置表模块
 ```
 
 ---
@@ -94,8 +92,8 @@ GameEntry.Awake()
 
 主包流程（不可热更）：
 ProcedureLaunch → ProcedureSplash → ProcedureInitResources → ProcedureInitPackage
-→ ProcedureCreateDownloader → ProcedureDownloadFile → ProcedurePreload
-→ ProcedureLoadAssembly → ProcedureStartGame
+→ ProcedureCreateDownloader → ProcedureDownloadFile → ProcedureDownloadOver
+→ ProcedureClearCache → ProcedurePreload → ProcedureLoadAssembly → ProcedureStartGame
 
 热更入口：ProcedureLoadAssembly 加载完热更 DLL 后通过反射调用
   GameApp.Entrance(object[] objects)
@@ -115,7 +113,8 @@ ProcedureLaunch → ProcedureSplash → ProcedureInitResources → ProcedureInit
 Assets/AssetRaw/              # 所有热更资源的根目录
 ├── Actor/                    # 角色 Prefab
 ├── Audios/BGM/ SFX/          # 音频
-├── Configs/bytes/            # Luban 生成数据
+├── Configs/                  # CSV 配置表（*.csv）
+├── DLL/                      # 热更 DLL（*.bytes）
 ├── Effects/                  # 粒子特效
 ├── Scenes/                   # 场景
 ├── UI/Atlas/ Prefabs/        # UI 资源
@@ -125,6 +124,7 @@ Assets/AssetRaw/              # 所有热更资源的根目录
 - **PRELOAD** 标签：启动时预加载（配置数据、公共 UI）
 - 资源 location 等于文件名（不含路径和扩展名），YooAsset 自动收集
 - **禁止** `Resources.Load()`，所有资源通过 `AssetRaw/` + YooAsset 管理
+- 配置表数据以 CSV 形式放在 `Configs/`，读取方式见 [config-csv.md](config-csv.md)
 
 ---
 
@@ -133,6 +133,7 @@ Assets/AssetRaw/              # 所有热更资源的根目录
 | 错误 | 原因 | 修复 |
 |------|------|------|
 | 误认为 GameScripts.Main 程序集存在 | GameEntry.cs 和 Procedure/ 无自定义 asmdef | 它们属于 Assembly-CSharp |
+| 在 GameLogic 里找 GameProto/配置生成代码 | GameProto 已随 Luban 一并移除 | 配置表走 CSV，见 [config-csv.md](config-csv.md) |
 | 热更入口签名写错 | 文档写 `Entrance(Assembly[])` | 实际为 `Entrance(object[])`，objects[0] 强转为 List<Assembly> |
 | 流程链遗漏 ProcedureSplash | 直接从 ProcedureLaunch 跳到 ProcedureInitResources | ProcedureLaunch → ProcedureSplash 才是正确的下一步 |
 
@@ -144,3 +145,4 @@ Assets/AssetRaw/              # 所有热更资源的根目录
 - 热更开发见 [hotfix-workflow.md](hotfix-workflow.md)
 - 事件系统见 [event-system.md](event-system.md)
 - 资源加载见 [resource-api.md](resource-api.md)
+- 配置表见 [config-csv.md](config-csv.md)

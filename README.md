@@ -28,7 +28,7 @@
 - 🧩 **高内聚低耦合** - 模块化设计，可轻松移除或替换不需要的模块
 - 🔄 **热更新支持** - 集成 HybridCLR，全平台热更新流程已跑通
 - 📦 **资源管理** - 集成 YooAsset，支持 LRU、ARC 缓存策略，自动资源释放
-- 📊 **配置表系统** - 集成 Luban，支持懒加载、异步加载、同步加载
+- 📊 **配置表系统** - CSV 直读，改表即生效，无需导表工具
 - 🎨 **UI 框架** - 商业化 UI 开发流程，支持代码自动生成
 - 🌍 **全平台支持** - Windows、Android、iOS、WebGL、微信小游戏等
 
@@ -295,7 +295,7 @@ sequenceDiagram
 | 💾 **内存池模块** | [3-3-内存池模块](Books/3-3-内存池模块.md) | 轻量级内存池管理 |
 | 🎮 **对象池模块** | [3-4-对象池模块](Books/3-4-对象池模块.md) | 游戏对象池管理 |
 | 🎨 **UI 模块** | [3-5-UI模块](Books/3-5-UI模块.md) | 商业化 UI 框架，支持代码生成 |
-| 📊 **配置表模块** | [3-6-配置表模块](Books/3-6-配置表模块.md) | Luban 配置表系统 |
+| 📊 **配置表模块** | [3-6-配置表模块](Books/3-6-配置表模块.md) | CSV 直读配置表系统 |
 | 🔄 **流程模块** | [3-7-流程模块](Books/3-7-流程模块.md) | 商业化启动流程 |
 | 🌐 **网络模块** | [3-8-网络模块](Books/3-8-网络模块.md) | 网络通信模块 |
 
@@ -327,12 +327,12 @@ sequenceDiagram
 - ✅ 支持全屏面板管理
 - ✅ 事件驱动架构
 
-### 配置表模块 (ConfigSystem)
+### 配置表模块 (CsvConfigModule)
 
-- ✅ 集成 Luban 配置表解决方案
-- ✅ 支持懒加载、异步加载、同步加载
-- ✅ 强大的数据校验能力
-- ✅ 完善的本地化支持
+- ✅ CSV 直读配置表解决方案（无需导表工具与生成代码）
+- ✅ 按需异步加载 + 缓存 + 显式释放
+- ✅ 类型化取值（int/float/bool/string/vector2/vector3/列表）
+- ✅ 随 AssetBundle 热更
 
 ### 流程模块 (ProcedureModule)
 
@@ -367,13 +367,13 @@ Assets/
 │   ├── Runtime/          # TEngine 运行时核心代码
 │   └── AssetSetting/     # YooAsset 资源设置
 └── GameScripts/          # 程序集目录
-    ├── Main/             # 主程序程序集（启动器与流程）
+    ├── GameEntry.cs      # 主程序入口（Assembly-CSharp，不热更）
+    ├── Procedure/        # 流程管理（Assembly-CSharp，不热更）
     └── HotFix/           # 游戏热更程序集目录
-        ├── GameBase/     # 游戏基础框架程序集 [Dll]
-        ├── GameProto/    # 游戏配置协议程序集 [Dll]
         └── GameLogic/    # 游戏业务逻辑程序集 [Dll]
             ├── GameApp.cs                  # 热更主入口
-            └── GameApp_RegisterSystem.cs   # 热更主入口注册系统
+            ├── Config/                     # CSV 配置表模块
+            └── UI/ Module/ IEvent/         # 业务代码
 ```
 
 ---
@@ -426,7 +426,6 @@ TEngine 本身为**纯净的客户端框架**，不强绑定任何服务器。�
 |------|------|------|
 | **YooAsset** | 商业级经历百万 DAU 游戏验证的资源管理系统 | [GitHub](https://github.com/tuyoogame/YooAsset) |
 | **HybridCLR** | 特性完整、零成本、高性能、低内存的近乎完美的 Unity 全平台原生 C# 热更方案 | [GitHub](https://github.com/focus-creative-games/hybridclr) |
-| **Luban** | 最佳游戏配置解决方案 | [GitHub](https://github.com/focus-creative-games/luban) |
 | **Fantasy** | 源于 ETServer 但极为简洁，更好上手的商业级服务器框架 | [GitHub](https://github.com/qq362946/Fantasy) |
 | **GameNetty** | 源于 ETServer，首次拆分最新的 ET8.1 的前后端解决方案 | [GitHub](https://github.com/ALEXTANGXIAO/GameNetty) |
 | **JEngine** | 使 Unity 开发的游戏支持热更新的解决方案 | [GitHub](https://github.com/JasonXuDeveloper/JEngine) |
@@ -459,7 +458,7 @@ git checkout demo
 
 ### 2. 商业级解决方案
 - ✅ 严格按照商业要求使用次世代的 **HybridCLR** 进行热更新
-- ✅ 最佳的 **Luban** 配置表（支持懒加载、异步加载、同步加载）
+- ✅ CSV 直读配置表（改表无需导表步骤）
 - ✅ 百万 DAU 游戏验证过的 **YooAsset** 资源框架
 - ✅ 全平台热更新流程已跑通
 

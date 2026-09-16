@@ -700,7 +700,7 @@ sequenceDiagram
 - **事件系统**: GameEvent, EventInterface, AddUIEvent
 - **资源管理**: YooAsset, LoadAssetAsync, UnloadAsset
 - **热更代码**: HybridCLR, GameApp, HotFix
-- **配置表**: Luban, ConfigSystem
+- **配置表**: CSV 直读（GameModule.Csv）
 
 ### 核心原则
 
@@ -709,33 +709,19 @@ tengine-dev 技能遵循以下核心原则：
 1. **异步优先**: IO 操作用 `UniTask`，禁止同步加载/Coroutine
 2. **模块访问**: 通过 `GameModule.XXX` 访问
 3. **资源必须释放**: `LoadAssetAsync` 对应 `UnloadAsset`
-4. **热更边界**: `GameScripts/Main` 不热更，`GameScripts/HotFix/` 全部热更
+4. **热更边界**: `GameScripts/HotFix/` 全部热更；`GameEntry.cs` 与 `Procedure/` 属 Assembly-CSharp，不热更
 5. **事件解耦**: 模块间用 `GameEvent`，UI 内部用 `AddUIEvent`
 
 ### 程序集分层
 
 ```
-GameScripts/Main/       → 主包（不热更）
-GameScripts/HotFix/
-  ├── GameProto/        → Luban 配置代码
-  └── GameLogic/        → 业务逻辑（GameApp.cs 入口）
+GameScripts/
+├── GameEntry.cs + Procedure/  → 主包（Assembly-CSharp，不热更）
+└── HotFix/
+    └── GameLogic/             → 业务逻辑（GameApp.cs 入口）+ Config/（CSV 配置模块）
 ```
 
 ### 其他 Skills
-
-#### luban-dev
-
-Luban 游戏配置全栈工具，支持枚举/Bean/数据表的增删改查、代码生成、TEngine 集成。
-
-**触发场景**：
-- 编辑游戏配置数据（配置表/数据表/道具表/技能表/奖励表/活动表）
-- 新增/修改/删除配置表结构
-- 定义枚举/Bean/字段
-- 导表/生成配置代码
-- 编写 luban.conf 或 Schema 定义
-- Luban 类型系统/校验器问题
-
-> 即使用户未明确说"Luban"，只要是编辑游戏配置数据，也应使用此技能。
 
 #### html-to-ugui
 
@@ -1379,7 +1365,7 @@ graph TB
         hybrid[HybridCLR<br/>热更新]
         yoo[YooAsset<br/>资源管理]
         uni[UniTask<br/>异步编程]
-        luban[Luban<br/>配置表]
+        csvconf[CSV<br/>配置表]
     end
 
     subgraph "Unity 引擎"
@@ -1397,7 +1383,7 @@ graph TB
     skills --> hybrid
     skills --> yoo
     skills --> uni
-    skills --> luban
+    skills --> csvconf
 
     unity --> editor
     skills --> editor

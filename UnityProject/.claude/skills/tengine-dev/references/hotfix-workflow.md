@@ -8,14 +8,10 @@
 
 ```
 GameScripts/HotFix/
-├── GameProto/          # Luban 生成（勿手改）
-│   ├── LubanLib/       # ByteBuf 等序列化库
-│   ├── GameConfig/     # Tables + 配置类
-│   └── ConfigSystem.cs # 配置加载器（需从 Luban 模板生成）
-│
 └── GameLogic/          # 业务逻辑（主开发区域）
     ├── GameApp.cs                  # 热更主入口（partial class）
     ├── GameModule.cs               # 模块统一访问入口
+    ├── Config/                     # CSV 配置表模块（Luban 已移除）
     ├── IEvent/                     # 事件接口定义
     ├── Module/                     # 模块实现（如 UIModule）
     ├── SingletonSystem/            # 单例系统
@@ -23,8 +19,9 @@ GameScripts/HotFix/
     └── ...
 ```
 
-**依赖规则**（不可逆向）：`GameLogic → GameProto`、`GameLogic → TEngine.Runtime`
+**依赖规则**（不可逆向）：`GameLogic → TEngine.Runtime`
 主包 `GameScripts/` + `Launcher/` 不可热更，仅含启动器和流程驱动。
+热更程序集清单只有 **GameLogic**（工程已移除 Luban，`GameProto` 程序集不存在）。
 
 ---
 

@@ -67,13 +67,12 @@ Assets
 ├── TEngine             // 框架核心目录
 └── GameScripts         // 程序集目录
     ├── Editor          // 编辑器程序集
-    ├── Main            // 主程序程序集(启动器与流程)
+    ├── GameEntry.cs    // 主程序入口（Assembly-CSharp，不热更）
+    ├── Procedure/      // 流程管理（Assembly-CSharp，不热更）
     └── HotFix          // 游戏热更程序集目录 [Folder]
-        ├── GameBase    // 游戏基础框架程序集 [Dll]
-        ├── GameProto   // 游戏配置协议程序集 [Dll]  
-        ├── BattleCore  // 游戏核心战斗程序集 [Dll] 
         └── GameLogic   // 游戏业务逻辑程序集 [Dll]
             ├── GameApp.cs                  // 热更主入口
+            ├── Config/                     // CSV 配置表模块
             └── GameApp_RegisterSystem.cs   // 热更主入口注册系统   
 
 

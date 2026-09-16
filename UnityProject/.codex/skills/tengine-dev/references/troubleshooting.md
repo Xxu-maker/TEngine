@@ -1,6 +1,6 @@
 # TEngine 常见问题排障
 
-> **适用场景**：编译报错/热更失败/资源加载失败/UI 不显示/事件无响应/性能问题/Luban 配置问题排查 | **关联文档**：[resource-api.md](resource-api.md)、[event-system.md](event-system.md)、[hotfix-workflow.md](hotfix-workflow.md)
+> **适用场景**：编译报错/热更失败/资源加载失败/UI 不显示/事件无响应/性能问题/CSV 配置表问题排查 | **关联文档**：[resource-api.md](resource-api.md)、[event-system.md](event-system.md)、[hotfix-workflow.md](hotfix-workflow.md)、[config-csv.md](config-csv.md)
 
 > 解决新问题后记录到 `.claude/memory/problem_YYYY-MM-DD.md`
 
@@ -15,7 +15,7 @@
 | UI | 界面空白、Widget 复用异常、事件销毁后触发、生命周期签名错误 |
 | 事件 | 接口事件无响应、监听收不到、UnRegisterAll 不存在 |
 | 内存/性能 | GC 频繁、启动慢、DrawCall 高 |
-| Luban | 生成报错、Tables 为 null、ConfigSystem 找不到 |
+| 配置表（CSV） | 资源找不到、类型行无效、矢量取不到、乱码 |
 | UniTask | 异常被吞、await 后对象为 null |
 
 ---
@@ -117,21 +117,28 @@ Frame Debugger 查看合批。UI 同 Atlas 同 Canvas、3D 用 GPU Instancing/St
 
 ---
 
-### Luban 问题
+### 配置表（CSV）问题
 
-#### 生成报错
+> 工程已移除 Luban，配置表以 CSV 直读，完整说明见 [config-csv.md](config-csv.md)。
 
-Excel 第2行类型拼写正确（`int`/`string`/`float`，区分大小写）；数组用英文逗号；Bean 先在 `__beans__.xlsx` 定义；`value_type` 与 Bean 类型名一致。
+#### 抛"资源不存在"
 
-#### Tables 为 null
+1. CSV 在 `Assets/AssetRaw/Configs/` 下，文件名与表名一致（地址＝文件名，不含扩展名）
+2. 放好后执行一次 `manage_editor {action:"refresh"}` 让 YooAsset/AssetDatabase 收录
+3. 数据文件有 `PRELOAD` 标签（若要随启动预加载）
 
-1. `ConfigSystem.Instance.Load()` 已在 `ProcedurePreload` 后调用
-2. `.bytes` 在 `AssetRaw/Configs/bytes/` 且 YooAsset 已收集
-3. 数据文件有 `PRELOAD` 标签
+#### 整表读成字符串 / 类型没生效
 
-#### ConfigSystem.cs 找不到
+第 2 行类型行未被识别：检查是否**每一格**都是已知类型名（`int`/`long`/`float`/`double`/`bool`/`string`/`vector2`/`vector3`），
+有一格写错就整行按数据行处理。或改用 `##type` 指令行写法。
 
-`ConfigSystem.cs` 不在 Assets 默认目录中，需从 Luban CustomTemplate 模板生成。详见 [luban-config.md](luban-config.md)。
+#### `GetVector3` 总是返回默认值
+
+单元格里的逗号被当成列分隔符了。矢量要写成 `"1,2,3"`（双引号包裹），或改用 `1;2;3`。
+
+#### 中文乱码
+
+CSV 不是 UTF-8。Excel 导出时选「CSV UTF-8」。
 
 ---
 
@@ -208,5 +215,5 @@ GameEvent.UnRegisterAll();    // 编译错误：GameEvent 无此方法
 - 事件系统见 [event-system.md](event-system.md)
 - 资源加载见 [resource-api.md](resource-api.md)
 - 热更开发见 [hotfix-workflow.md](hotfix-workflow.md)
-- Luban 配置见 [luban-config.md](luban-config.md)
+- CSV 配置表见 [config-csv.md](config-csv.md)
 - 架构总览见 [architecture.md](architecture.md)

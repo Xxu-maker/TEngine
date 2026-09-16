@@ -72,7 +72,7 @@ memory: project
 - **模块 API（Timer/Scene/Audio/Fsm）** → `modules.md`
 - **事件系统** → `event-system.md`
 - **热更新代码** → `hotfix-development.md`
-- **配置表/Luban** → `luban-config.md`
+- **配置表/CSV** → `config-csv.md`
 - **代码规范/命名** → `conventions.md`
 - **架构/启动流程** → `architecture.md`
 - **问题排查** → `troubleshooting.md`

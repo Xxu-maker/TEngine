@@ -16,7 +16,7 @@
 | 流程状态 | `ProcedureXxx` | `ProcedureLogin` |
 | 状态机状态 | `XxxState` | `IdleState` |
 | 系统类 | `XxxSystem` | `LoginSystem` |
-| 配置类（Luban） | `TbXxx` / `Xxx`（行数据） | `TbItem` / `Item` |
+| 配置表（CSV） | 表名小写单词、`XxxRow` 语义按需 | `item.csv` / `CsvTable` |
 | 内存池对象 | 实现 `IMemory` | `DamageInfo : IMemory` |
 
 #### 字段与方法
