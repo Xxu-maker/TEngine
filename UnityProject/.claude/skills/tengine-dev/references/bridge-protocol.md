@@ -14,7 +14,7 @@
 | 事实 | 源码行 |
 |---|---|
 | 空 type → `Response.Error("Command type cannot be empty", "A valid command type is required for processing")` | 477-482 |
-| 空/非法 JSON → `Response.Error("Empty command received")` / `Response.Error("Invalid JSON format", { receivedText })` | 357-370 |
+| 空文本命令 → `Response.Error("Empty command received")`；非法 JSON → `Response.Error("Invalid JSON format", { receivedText })`；反序列化为 null → `Response.Error("Command deserialized to null")` | 357-377 |
 | 取值：`JObject paramsObject = command.@params ?? new JObject(); string action = paramsObject["action"]?.ToString();` | 485-486 |
 | **写保护检查在此处、以“原始未归一化的 action 字符串”进行**：`WriteGuard.CheckCommandWriteAllowed(command.type, action)`；被拒时返回 `Response.Error("Command blocked by write guard", writeBlocked)` | 488-496 |
 | 命令名 → 处理器 switch | 500-583 |
@@ -24,6 +24,7 @@
 | `manage_scene` 独占主线程派发 `MainThreadHelper.InvokeOnMainThreadWithTimeout(..., FrameIOTimeoutMs)`；`FrameIOTimeoutMs = 3000`；超时 null → `TimeoutException($"manage_scene timed out after {FrameIOTimeoutMs} ms on main thread")` / `Response.Error("manage_scene returned null (timeout or error)")` | 44, 513-516, 616-631 |
 | 后台 worker 线程白名单：`BackgroundTypes = { "manage_job", "manage_dialog" }`；其它类型落到后台线程的响应为 `Response.Error($"Command '{command?.type}' cannot run on the background executor.")` | BackgroundCommandPump.cs:215, 222-247；UnityTcpBridge.cs:410-452 |
 | 后台路径信封同样是 `Response.Success("Command executed successfully", result)` | UnityTcpBridge.cs:433-434 |
+| 域重载前广播 `script_session_destroyed`（payload 带 `script_session_id`） | 645-666 |
 
 ### 命令名清单（switch 全量，UnityTcpBridge.cs:500-583）
 
