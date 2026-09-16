@@ -1,27 +1,21 @@
 {
   "dependencies": {
+    "cn.tuanjie.codely.bridge": {
+      "version": "1.0.81",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.ext.nunit": "1.0.6",
+        "com.unity.ugui": "1.0.0"
+      },
+      "url": "https://packages.unity.cn"
+    },
     "com.code-philosophy.hybridclr": {
       "version": "https://gitee.com/focus-creative-games/hybridclr_unity.git",
       "depth": 0,
       "source": "git",
       "dependencies": {},
       "hash": "4df417e56ad827cd7e70a54662f0e8bab90aafe9"
-    },
-    "com.coplaydev.unity-mcp": {
-      "version": "file:MCPForUnity",
-      "depth": 0,
-      "source": "embedded",
-      "dependencies": {
-        "com.unity.modules.animation": "1.0.0",
-        "com.unity.modules.imageconversion": "1.0.0",
-        "com.unity.modules.physics": "1.0.0",
-        "com.unity.modules.physics2d": "1.0.0",
-        "com.unity.modules.uielements": "1.0.0",
-        "com.unity.modules.screencapture": "1.0.0",
-        "com.unity.modules.unitywebrequest": "1.0.0",
-        "com.unity.nuget.newtonsoft-json": "3.0.2",
-        "com.unity.test-framework": "1.1.31"
-      }
     },
     "com.cysharp.unitask": {
       "version": "file:UniTask",
@@ -41,10 +35,11 @@
       }
     },
     "com.unity.ext.nunit": {
-      "version": "2.0.5",
+      "version": "1.0.6",
       "depth": 1,
-      "source": "builtin",
-      "dependencies": {}
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.cn"
     },
     "com.unity.ide.rider": {
       "version": "3.0.38",
@@ -53,7 +48,7 @@
       "dependencies": {
         "com.unity.ext.nunit": "1.0.6"
       },
-      "url": "https://packages.unity.com"
+      "url": "https://packages.unity.cn"
     },
     "com.unity.ide.visualstudio": {
       "version": "2.0.23",
@@ -62,56 +57,57 @@
       "dependencies": {
         "com.unity.test-framework": "1.1.9"
       },
-      "url": "https://packages.unity.com"
+      "url": "https://packages.unity.cn"
     },
     "com.unity.ide.vscode": {
       "version": "1.2.5",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
-      "url": "https://packages.unity.com"
+      "url": "https://packages.unity.cn"
     },
     "com.unity.nuget.newtonsoft-json": {
       "version": "3.2.1",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
-      "url": "https://packages.unity.com"
+      "url": "https://packages.unity.cn"
     },
     "com.unity.scriptablebuildpipeline": {
-      "version": "2.4.0",
+      "version": "1.21.25",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.cn"
+    },
+    "com.unity.test-framework": {
+      "version": "1.1.33",
       "depth": 1,
       "source": "registry",
       "dependencies": {
-        "com.unity.test-framework": "1.4.5",
-        "com.unity.modules.assetbundle": "1.0.0"
-      },
-      "url": "https://packages.unity.com"
-    },
-    "com.unity.test-framework": {
-      "version": "1.5.1",
-      "depth": 1,
-      "source": "builtin",
-      "dependencies": {
-        "com.unity.ext.nunit": "2.0.3",
+        "com.unity.ext.nunit": "1.0.6",
         "com.unity.modules.imgui": "1.0.0",
         "com.unity.modules.jsonserialize": "1.0.0"
-      }
+      },
+      "url": "https://packages.unity.cn"
+    },
+    "com.unity.textmeshpro": {
+      "version": "3.0.6",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.ugui": "1.0.0"
+      },
+      "url": "https://packages.unity.cn"
     },
     "com.unity.ugui": {
-      "version": "2.0.0",
+      "version": "1.0.0",
       "depth": 0,
       "source": "builtin",
       "dependencies": {
         "com.unity.modules.ui": "1.0.0",
         "com.unity.modules.imgui": "1.0.0"
       }
-    },
-    "com.unity.modules.accessibility": {
-      "version": "1.0.0",
-      "depth": 0,
-      "source": "builtin",
-      "dependencies": {}
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",
@@ -159,12 +155,6 @@
         "com.unity.modules.audio": "1.0.0",
         "com.unity.modules.animation": "1.0.0"
       }
-    },
-    "com.unity.modules.hierarchycore": {
-      "version": "1.0.0",
-      "depth": 1,
-      "source": "builtin",
-      "dependencies": {}
     },
     "com.unity.modules.imageconversion": {
       "version": "1.0.0",
@@ -254,8 +244,7 @@
       "dependencies": {
         "com.unity.modules.ui": "1.0.0",
         "com.unity.modules.imgui": "1.0.0",
-        "com.unity.modules.jsonserialize": "1.0.0",
-        "com.unity.modules.hierarchycore": "1.0.0"
+        "com.unity.modules.jsonserialize": "1.0.0"
       }
     },
     "com.unity.modules.umbra": {
